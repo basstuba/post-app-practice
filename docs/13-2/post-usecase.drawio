@@ -7,7 +7,7 @@
                 <mxCell id="2" value="ログイン前ユーザー" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
                     <mxGeometry x="160" y="180" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="3" value="ログイン後ユーザー" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+                <mxCell id="3" value="ログイン済ユーザー" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
                     <mxGeometry x="160" y="350" width="30" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="4" value="投稿アプリ" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
