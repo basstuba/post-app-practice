@@ -1,0 +1,30 @@
+<mxfile host="65bd71144e" scale="1" border="30">
+    <diagram id="_FDP71QkGBTqzLTKotTx" name="ページ-1">
+        <mxGraphModel dx="619" dy="654" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="light-dark(#ffffff, #121212)" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="3Ft4qVHVdEcNYPfg_SaT-1" parent="1" style="whiteSpace=wrap;html=1;align=center;" value="admins" vertex="1">
+                    <mxGeometry height="40" width="100" x="120" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="3Ft4qVHVdEcNYPfg_SaT-2" parent="1" style="whiteSpace=wrap;html=1;align=center;" value="items" vertex="1">
+                    <mxGeometry height="40" width="100" x="120" y="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="3Ft4qVHVdEcNYPfg_SaT-3" parent="1" style="whiteSpace=wrap;html=1;align=center;" value="orders" vertex="1">
+                    <mxGeometry height="40" width="100" x="440" y="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="3Ft4qVHVdEcNYPfg_SaT-4" edge="1" parent="1" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="3Ft4qVHVdEcNYPfg_SaT-3" value="">
+                    <mxGeometry height="100" relative="1" width="100" as="geometry">
+                        <mxPoint x="220" y="220" as="sourcePoint"/>
+                        <mxPoint x="320" y="120" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="3Ft4qVHVdEcNYPfg_SaT-5" connectable="0" parent="3Ft4qVHVdEcNYPfg_SaT-4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1つの商品は複数の注文に属する" vertex="1">
+                    <mxGeometry relative="1" x="-0.0873" y="2" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
