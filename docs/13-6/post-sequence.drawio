@@ -1,0 +1,174 @@
+<mxfile host="65bd71144e" scale="1" border="30">
+    <diagram id="5gi1OSIbf3gaUA1Onb6c" name="ページ-1">
+        <mxGraphModel dx="804" dy="656" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="light-dark(#ffffff, #121212)" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="NX1fgdQz2eTam53I79MG-6" edge="1" parent="1" source="NX1fgdQz2eTam53I79MG-1" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;startArrow=none;startFill=0;endArrow=none;endFill=0;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="140" y="640" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="ブラウザ" vertex="1">
+                    <mxGeometry height="60" width="120" x="80" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-7" edge="1" parent="1" source="NX1fgdQz2eTam53I79MG-2" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="340" y="640" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="PostController" vertex="1">
+                    <mxGeometry height="60" width="120" x="280" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-8" edge="1" parent="1" source="NX1fgdQz2eTam53I79MG-3" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="540" y="640" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Post" vertex="1">
+                    <mxGeometry height="60" width="120" x="480" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-9" edge="1" parent="1" source="NX1fgdQz2eTam53I79MG-4" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="740" y="640" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="データベース" vertex="1">
+                    <mxGeometry height="60" width="120" x="680" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-10" edge="1" parent="1" style="endArrow=classic;html=1;" value="">
+                    <mxGeometry height="50" relative="1" width="50" as="geometry">
+                        <mxPoint x="140" y="140" as="sourcePoint"/>
+                        <mxPoint x="340" y="140" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-23" connectable="0" parent="NX1fgdQz2eTam53I79MG-10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" value="直したタイトル・カテゴリ・本文を送る" vertex="1">
+                    <mxGeometry relative="1" x="0.01" y="-2" as="geometry">
+                        <mxPoint x="-1" y="-12" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-11" edge="1" parent="1" style="endArrow=classic;html=1;" value="">
+                    <mxGeometry height="50" relative="1" width="50" as="geometry">
+                        <mxPoint x="340" y="180" as="sourcePoint"/>
+                        <mxPoint x="540" y="180" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-26" connectable="0" parent="NX1fgdQz2eTam53I79MG-11" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" value="この内容で投稿を書き換えるように頼む" vertex="1">
+                    <mxGeometry relative="1" x="-0.04" y="2" as="geometry">
+                        <mxPoint y="-8" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-12" edge="1" parent="1" style="endArrow=classic;html=1;" value="">
+                    <mxGeometry height="50" relative="1" width="50" as="geometry">
+                        <mxPoint x="540" y="220" as="sourcePoint"/>
+                        <mxPoint x="740" y="220" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-25" connectable="0" parent="NX1fgdQz2eTam53I79MG-12" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" value="その1行を書き換える" vertex="1">
+                    <mxGeometry relative="1" x="-0.03" y="2" as="geometry">
+                        <mxPoint y="-8" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-13" edge="1" parent="1" style="endArrow=classic;html=1;" value="">
+                    <mxGeometry height="50" relative="1" width="50" as="geometry">
+                        <mxPoint x="740" y="260" as="sourcePoint"/>
+                        <mxPoint x="540" y="260" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-27" connectable="0" parent="NX1fgdQz2eTam53I79MG-13" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" value="書き換えられたことを返す" vertex="1">
+                    <mxGeometry relative="1" x="0.03" y="-1" as="geometry">
+                        <mxPoint y="-9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-14" edge="1" parent="1" style="endArrow=classic;html=1;" value="">
+                    <mxGeometry height="50" relative="1" width="50" as="geometry">
+                        <mxPoint x="540" y="300" as="sourcePoint"/>
+                        <mxPoint x="340" y="300" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-28" connectable="0" parent="NX1fgdQz2eTam53I79MG-14" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" value="書き換えた投稿を返す" vertex="1">
+                    <mxGeometry relative="1" x="0.02" y="-1" as="geometry">
+                        <mxPoint y="-9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-15" edge="1" parent="1" style="endArrow=none;html=1;startArrow=classic;startFill=1;endFill=0;" value="">
+                    <mxGeometry height="50" relative="1" width="50" as="geometry">
+                        <mxPoint x="140" y="340" as="sourcePoint"/>
+                        <mxPoint x="340" y="340" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-29" connectable="0" parent="NX1fgdQz2eTam53I79MG-15" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" value="投稿一覧画面へ行くよう返す" vertex="1">
+                    <mxGeometry relative="1" x="0.02" as="geometry">
+                        <mxPoint y="-10" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-16" edge="1" parent="1" style="endArrow=classic;html=1;" value="">
+                    <mxGeometry height="50" relative="1" width="50" as="geometry">
+                        <mxPoint x="140" y="380" as="sourcePoint"/>
+                        <mxPoint x="340" y="380" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-30" connectable="0" parent="NX1fgdQz2eTam53I79MG-16" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" value="投稿一覧を求める" vertex="1">
+                    <mxGeometry relative="1" x="-0.01" y="-2" as="geometry">
+                        <mxPoint y="-12" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-17" edge="1" parent="1" style="endArrow=classic;html=1;" value="">
+                    <mxGeometry height="50" relative="1" width="50" as="geometry">
+                        <mxPoint x="340" y="420" as="sourcePoint"/>
+                        <mxPoint x="540" y="420" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-31" connectable="0" parent="NX1fgdQz2eTam53I79MG-17" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" value="新しい順に投稿を取ってくるように頼む" vertex="1">
+                    <mxGeometry relative="1" x="-0.01" y="-2" as="geometry">
+                        <mxPoint y="-12" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-18" edge="1" parent="1" style="endArrow=classic;html=1;" value="">
+                    <mxGeometry height="50" relative="1" width="50" as="geometry">
+                        <mxPoint x="540" y="460" as="sourcePoint"/>
+                        <mxPoint x="740" y="460" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-32" connectable="0" parent="NX1fgdQz2eTam53I79MG-18" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" value="投稿の行と、書いた人とカテゴリを読む" vertex="1">
+                    <mxGeometry relative="1" x="0.05" y="-2" as="geometry">
+                        <mxPoint x="-5" y="-12" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-19" edge="1" parent="1" style="endArrow=none;html=1;startArrow=classic;startFill=1;endFill=0;" value="">
+                    <mxGeometry height="50" relative="1" width="50" as="geometry">
+                        <mxPoint x="540" y="500" as="sourcePoint"/>
+                        <mxPoint x="740" y="500" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-33" connectable="0" parent="NX1fgdQz2eTam53I79MG-19" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" value="読んだ行を返す" vertex="1">
+                    <mxGeometry relative="1" x="-0.02" y="-2" as="geometry">
+                        <mxPoint y="-12" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-20" edge="1" parent="1" style="endArrow=none;html=1;startArrow=classic;startFill=1;endFill=0;" value="">
+                    <mxGeometry height="50" relative="1" width="50" as="geometry">
+                        <mxPoint x="340" y="540" as="sourcePoint"/>
+                        <mxPoint x="540" y="540" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-34" connectable="0" parent="NX1fgdQz2eTam53I79MG-20" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" value="投稿の一覧を返す" vertex="1">
+                    <mxGeometry relative="1" x="-0.11" as="geometry">
+                        <mxPoint x="11" y="-10" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-21" edge="1" parent="1" style="endArrow=none;html=1;startArrow=classic;startFill=1;endFill=0;" value="">
+                    <mxGeometry height="50" relative="1" width="50" as="geometry">
+                        <mxPoint x="140" y="584" as="sourcePoint"/>
+                        <mxPoint x="340" y="584" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NX1fgdQz2eTam53I79MG-35" connectable="0" parent="NX1fgdQz2eTam53I79MG-21" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" value="投稿一覧画面を返す" vertex="1">
+                    <mxGeometry relative="1" x="0.02" y="-4" as="geometry">
+                        <mxPoint x="-2" y="-18" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
