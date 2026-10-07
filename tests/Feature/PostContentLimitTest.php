@@ -74,4 +74,26 @@ class PostContentLimitTest extends TestCase
 
         $this->assertSame('元の本文', $this->post->fresh()->content);
     }
+
+    public function test_編集画面に残り文字数が表示される(): void
+    {
+        // 「元の本文」は4字
+        $this->actingAs($this->user)->get(route('posts.edit', $this->post))
+            ->assertOk()
+            ->assertSee('残り136字');
+    }
+
+    public function test_超過して更新に失敗した編集画面にエラーとオーバー表示が出る(): void
+    {
+        $this->actingAs($this->user)->from(route('posts.edit', $this->post))
+            ->put(route('posts.update', $this->post), [
+                'title' => 'タイトル',
+                'category_id' => $this->category->id,
+                'content' => str_repeat('あ', 142),
+            ]);
+
+        $this->actingAs($this->user)->get(route('posts.edit', $this->post))
+            ->assertSee('本文は140字以内で入力してください。')
+            ->assertSee('2字オーバー');
+    }
 }
