@@ -2,24 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ValidatesContent;
 use App\Models\Post;
 use App\Models\Reply;
 use Illuminate\Http\Request;
 
 class ReplyController extends Controller
 {
+    use ValidatesContent;
+
     public function store(Request $request, Post $post)
     {
-        // ブラウザは改行を \r\n で送るので、1 字として数えるために \n にそろえる
-        $request->merge([
-            'content' => str_replace("\r\n", "\n", (string) $request->input('content')),
-        ]);
+        $this->normalizeContent($request);
 
         $validated = $request->validate([
-            'content' => 'required|string|max:140',
-        ], [
-            'content.max' => '本文は140字以内で入力してください。',
-        ]);
+            'content' => $this->contentRules(),
+        ], $this->contentMessages());
 
         $post->replies()->create([
             'user_id' => $request->user()->id,

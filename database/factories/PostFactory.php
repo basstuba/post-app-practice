@@ -15,7 +15,7 @@ class PostFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'category_id' => Category::firstOrCreate(['name' => 'お知らせ'])->id,
+            'category_id' => Category::factory(),
             'title' => 'タイトル',
             'content' => '本文',
         ];

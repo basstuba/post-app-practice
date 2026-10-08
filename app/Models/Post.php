@@ -30,6 +30,7 @@ class Post extends Model
 
     public function replies(): HasMany
     {
-        return $this->hasMany(Reply::class);
+        // 古い順。同じ秒のリプライは id 順にして並びを安定させる
+        return $this->hasMany(Reply::class)->orderBy('created_at')->orderBy('id');
     }
 }

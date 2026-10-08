@@ -168,6 +168,16 @@ class ReplyTest extends TestCase
     }
 
     #[Test]
+    public function 本文に配列を送っても500にならずエラーになる(): void
+    {
+        $this->actingAs($this->user)
+            ->post(route('replies.store', $this->post), ['content' => ['x']])
+            ->assertSessionHasErrors('content');
+
+        $this->assertDatabaseCount('replies', 0);
+    }
+
+    #[Test]
     public function 空白だけの本文はエラーになる(): void
     {
         $this->send("   \n  ")->assertSessionHasErrors('content');

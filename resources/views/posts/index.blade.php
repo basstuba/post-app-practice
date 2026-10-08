@@ -29,7 +29,7 @@
         .post-head .time::before { content: "・"; margin-right: 0.05rem; color: #98A1A8; }
         .topic { margin-left: auto; border-radius: 999px; padding: 0.1rem 0.6rem; font-size: 0.7rem; font-weight: 700; }
         .post-title { font-weight: 700; font-size: 0.96rem; margin: 0.28rem 0 0.06rem; }
-        .post-text { font-size: 0.94rem; line-height: 1.7; color: #0F1419; overflow-wrap: anywhere; }
+        .post-text { font-size: 0.94rem; line-height: 1.7; color: #0F1419; overflow-wrap: anywhere; white-space: pre-line; }
         .post-actions { display: flex; gap: 1.2rem; margin-top: 0.5rem; }
         .post-actions a, .post-actions button { background: none; border: none; padding: 0; color: #5B6570; font-size: 0.8rem; font-weight: 600; cursor: pointer; font-family: inherit; }
         .post-actions a:hover { color: #0F1419; text-decoration: underline; text-underline-offset: 3px; }

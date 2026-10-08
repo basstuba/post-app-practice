@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ValidatesContent;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    use ValidatesContent;
+
     public function index()
     {
         $posts = Post::with(['user', 'category'])->latest()->get();
@@ -17,10 +20,9 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
-        $post->load(['user', 'category']);
-        $replies = $post->replies()->with('user')->orderBy('created_at')->orderBy('id')->get();
+        $post->load(['user', 'category', 'replies.user']);
 
-        return view('posts.show', compact('post', 'replies'));
+        return view('posts.show', compact('post'));
     }
 
     public function edit(Post $post)
@@ -36,18 +38,13 @@ class PostController extends Controller
     {
         $this->authorize('update', $post);
 
-        // ブラウザは改行を \r\n で送るので、1 字として数えるために \n にそろえる
-        $request->merge([
-            'content' => str_replace("\r\n", "\n", (string) $request->input('content')),
-        ]);
+        $this->normalizeContent($request);
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required|string|max:140',
+            'content' => $this->contentRules(),
             'category_id' => 'required|exists:categories,id',
-        ], [
-            'content.max' => '本文は140字以内で入力してください。',
-        ]);
+        ], $this->contentMessages());
 
         $post->update($validated);
 
