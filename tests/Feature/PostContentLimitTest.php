@@ -68,6 +68,17 @@ class PostContentLimitTest extends TestCase
         $this->assertSame(str_replace("\r\n", "\n", $content), $this->post->fresh()->content);
     }
 
+    public function test_本文に配列を送っても500にならずエラーになる(): void
+    {
+        $this->actingAs($this->user)->put(route('posts.update', $this->post), [
+            'title' => 'タイトル',
+            'category_id' => $this->category->id,
+            'content' => ['x'],
+        ])->assertSessionHasErrors('content');
+
+        $this->assertSame('元の本文', $this->post->fresh()->content);
+    }
+
     public function test_他人の投稿は更新できない(): void
     {
         $this->update('更新', User::factory()->create())->assertForbidden();
