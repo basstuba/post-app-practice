@@ -141,7 +141,7 @@
             <form class="reply-form" action="{{ route('replies.store', $post) }}" method="POST">
                 @csrf
                 <label for="content">本文</label>
-                <textarea id="content" name="content" required>{{ old('content') }}</textarea>
+                <textarea id="content" name="content">{{ old('content') }}</textarea>
                 @error('content')
                     <p class="error">{{ $message }}</p>
                 @enderror
