@@ -28,7 +28,7 @@ COACHTECH の教材用の小さな Laravel 10 投稿アプリ（post-app）。Tu
 - テストは `phpunit.xml` で `DB_DATABASE=testing` を使う。`testing` DB は Sail の MySQL コンテナ初期化時に自動作成される。DB を使うテストでは `RefreshDatabase` を使う。テストメソッドは `test_` 接頭辞ではなく `#[Test]` 属性（`PHPUnit\Framework\Attributes\Test`）を付け、名前は日本語で書く（`ReplyTest` の形式。既存の `PostContentLimitTest` は `test_` 形式のまま）。
 - 初回起動直後の `migrate` で「Connection refused」が出るのは MySQL の起動待ち。少し待って再実行する。
 
-練習用アカウント（`--seed`）：`usera@example.com` / `userb@example.com`、パスワードはどちらも `password`。各ユーザーに投稿 2 件、カテゴリ 3 件（お知らせ・技術メモ・雑記）。
+練習用アカウント（`--seed`）：`usera@example.com` / `userb@example.com`、パスワードはどちらも `password`。シーダーはユーザー 7 人（上の 2 人＋`mio`・`sota`・`yui`・`kento`・`akari` の `@example.com`、パスワードは同じ）、ポスト 25 件（usera・userb は各 4 件）、カテゴリ 3 件（お知らせ・技術メモ・雑記）を入れる。リプライは入れない。
 
 ## アーキテクチャ
 

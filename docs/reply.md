@@ -1,3 +1,5 @@
+> この設計書は、この機能を実装した時点の記録です。このあとは更新していません。
+
 # リプライ機能 設計書
 
 Issue: https://github.com/basstuba/post-app-practice/issues/1
