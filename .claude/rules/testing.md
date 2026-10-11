@@ -1,0 +1,58 @@
+# テストの決まり
+
+機能追加・修正でテストを書くとき、テストを回すときの決まり。依頼で個別に指定があればそちらを優先する。
+
+## 実行
+
+すべて Laravel Sail 経由で実行する。
+
+```bash
+./vendor/bin/sail artisan test               # 全テスト
+./vendor/bin/sail artisan test --filter=メソッド名またはクラス名  # 単一テスト
+./vendor/bin/sail artisan test tests/Feature/ExampleTest.php
+```
+
+- `phpunit.xml` で `DB_DATABASE=testing` を使う。`testing` DB は Sail の MySQL コンテナ初期化時に自動作成される。
+- 機能追加・修正にはテストを書く。書いたら `./vendor/bin/sail artisan test` を**全件**回し、落ちたら直して通るまで繰り返す。
+- 最後に結果（件数・成否）を報告する。直せずに残ったものがあれば、隠さずそのまま書く。
+
+## ファイルとクラス
+
+- `tests/Feature/<機能名>Test.php`、名前空間は `Tests\Feature`、`Tests\TestCase` を継承する（例：`ReplyTest`、`PostCreateTest`）。このアプリのテストは画面・ルート単位の Feature テストが中心で、`tests/Unit` には書いていない。
+- `ExampleTest`（Feature / Unit）は Laravel の雛形。真似しない。
+- DB を使うテストは `use RefreshDatabase;` を付ける。
+- 共通の準備は `setUp()` に置き、`parent::setUp()` を先頭で呼ぶ。ユーザーなど使い回すものは型付きの `private` プロパティに持つ。
+- リクエストの組み立てが繰り返されるなら `private function send(...)`（更新なら `update(...)`）にまとめる。`array_merge` や引数で上書きできるようにして、1 項目だけ変えるテストを書きやすくする。
+- コードの整形は `./vendor/bin/sail pint`。
+
+## メソッド
+
+- `test_` 接頭辞ではなく `#[Test]` 属性（`PHPUnit\Framework\Attributes\Test`）を付ける。戻り値は `: void`。
+- メソッド名は日本語で、何をしたらどうなるかが読める文にする（例：`本文が空だとエラーになりリプライは増えない`）。単語の区切りは `_` でよい。
+- 既存の `PostContentLimitTest` は `test_` 形式のまま。形式を揃える目的で直さない。新しく書くものは `#[Test]` 形式。
+- クラス内は `// --- 受け入れ条件 ---`、`// --- 境界・認可・その他 ---`、`// --- 既存の動きが変わっていないことの確認 ---` のような見出しコメントで区切る。受け入れ条件（Issue・設計書）を先頭に、1 条件 1 テストで並べる。
+- コメントは日本語。数字や改行など、読み手が見落としやすい前提だけに書く（例：`// ブラウザ送信を想定して改行は \r\n。1 字として数える`）。
+
+## 準備データと検証
+
+- データは Factory で作る（`UserFactory`・`PostFactory`・`ReplyFactory`・`CategoryFactory`）。関連は `Reply::factory()->for($post)->for($user)` のように `for()` で結ぶ。順序のテストでは `created_at` を明示する。
+- URL は直書きせず `route('posts.show', $post)` のようにルート名で書く。存在しない ID の 404 確認など、ルートを引けない場合だけパスを直書きする。
+- DB の確認は `assertDatabaseHas` / `assertDatabaseCount` / `assertDatabaseMissing`、モデルは `assertModelExists` / `assertModelMissing`。
+- 失敗するケース（入力エラー・403・未ログイン）では、**DB が変わっていないこと**も確認する（件数が増えない、元の値のまま）。
+- 入力エラーは `assertSessionHasErrors(['content' => '本文を入力してください。'])` のように、項目名と**日本語のメッセージ**まで確かめる。
+- 画面の確認は `assertSee` / `assertDontSee` / `assertSeeInOrder`。HTML 属性や URL を見るときは第 2 引数に `false`（エスケープしない）を渡す。
+- 認可は `assertForbidden()`（他人の投稿・リプライ）、未ログインは `assertRedirect(route('login'))`（または `'/login'`）で確かめる。
+
+## 入れるケース
+
+機能を足すとき、該当するものは省かずテストにする。
+
+- **受け入れ条件**：Issue・設計書の条件ごとに 1 つ。
+- **境界値**：文字数の上限ちょうどと 1 字超過（本文 140 / 141、タイトル 255 / 256）。
+- **入力の癖**：空、空白だけ、改行を含む（`\r\n` は 1 字として数え、保存は `\n`）、配列を送っても 500 にならない。
+- **エラーで戻ったとき**：入力した内容とエラーメッセージが画面に残る（`from()` で戻り先を指定して確認する）。
+- **認可と認証**：他人の投稿・リプライは 403、ポストの持ち主でも他人のリプライは消せない、未ログインはログイン画面へ。
+- **存在しないもの**：存在しないポスト・リプライは 404。
+- **カスケード**：ユーザー・ポストを消すと、ぶら下がるリプライも消える。
+- **既存の動きが変わっていないこと**：タイムライン（`posts.index`）の表示・リンク、他人のポストに編集・削除が出ない、など。CLAUDE.md の「変えないもの」に対応させる。
+- **言語設定**：入力チェックが日本語で出る。訳していない項目で翻訳キーがそのまま出ない。

@@ -19,13 +19,9 @@ COACHTECH の教材用の小さな Laravel 10 投稿アプリ（post-app）。Tu
 ./vendor/bin/sail down                       # 停止
 ./vendor/bin/sail artisan migrate --seed     # テーブル作成＋練習用データ
 ./vendor/bin/sail artisan migrate:fresh --seed  # DB を作り直す
-./vendor/bin/sail artisan test               # 全テスト
-./vendor/bin/sail artisan test --filter=メソッド名またはクラス名  # 単一テスト
-./vendor/bin/sail artisan test tests/Feature/ExampleTest.php
 ./vendor/bin/sail pint                       # コード整形（laravel/pint）
 ```
 
-- テストは `phpunit.xml` で `DB_DATABASE=testing` を使う。`testing` DB は Sail の MySQL コンテナ初期化時に自動作成される。DB を使うテストでは `RefreshDatabase` を使う。テストメソッドは `test_` 接頭辞ではなく `#[Test]` 属性（`PHPUnit\Framework\Attributes\Test`）を付け、名前は日本語で書く（`ReplyTest` の形式。既存の `PostContentLimitTest` は `test_` 形式のまま）。
 - 初回起動直後の `migrate` で「Connection refused」が出るのは MySQL の起動待ち。少し待って再実行する。
 
 練習用アカウント（`--seed`）：`usera@example.com` / `userb@example.com`、パスワードはどちらも `password`。シーダーはユーザー 7 人（上の 2 人＋`mio`・`sota`・`yui`・`kento`・`akari` の `@example.com`、パスワードは同じ）、ポスト 25 件（usera・userb は各 4 件）、カテゴリ 3 件（お知らせ・技術メモ・雑記）を入れる。リプライは入れない。
@@ -36,7 +32,6 @@ COACHTECH の教材用の小さな Laravel 10 投稿アプリ（post-app）。Tu
 
 - **変えないもの**：機能追加・修正では、タイムライン（`posts.index`）の今の動きを変えない。今の動きは「全ポストを新しい順（`latest()`）に、ページ分けなしで並べる」で、一覧に出る項目・並び順・リンク先も含む。追加する機能のためにここを変える必要が出たら、変えずに止めて確認する。依頼に「変えないもの」が他にあれば、それも同様に守る。
 - **入力チェックのメッセージは日本語**で出す。訳は `lang/ja/validation.php` に足し、使うルールと項目名が足りなければそこへ追加する。コントローラー内でメッセージを個別指定する場合も日本語にする。
-- **テストを書き、通してから報告する**：機能追加・修正にはテストを書く（形式は「コマンド」の節）。`./vendor/bin/sail artisan test` を全件回し、落ちたら直して通るまで繰り返す。最後に結果（件数・成否）を報告する。直せずに残ったものがあれば、隠さずそのまま書く。
 
 ### PR 本文の型
 
