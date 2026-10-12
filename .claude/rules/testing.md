@@ -6,12 +6,6 @@
 
 すべて Laravel Sail 経由で実行する。
 
-```bash
-./vendor/bin/sail artisan test               # 全テスト
-./vendor/bin/sail artisan test --filter=メソッド名またはクラス名  # 単一テスト
-./vendor/bin/sail artisan test tests/Feature/ExampleTest.php
-```
-
 - `phpunit.xml` で `DB_DATABASE=testing` を使う。`testing` DB は Sail の MySQL コンテナ初期化時に自動作成される。
 - 機能追加・修正にはテストを書く。書いたら `./vendor/bin/sail artisan test` を**全件**回し、落ちたら直して通るまで繰り返す。
 - 最後に結果（件数・成否）を報告する。直せずに残ったものがあれば、隠さずそのまま書く。
@@ -23,7 +17,6 @@
 - DB を使うテストは `use RefreshDatabase;` を付ける。
 - 共通の準備は `setUp()` に置き、`parent::setUp()` を先頭で呼ぶ。ユーザーなど使い回すものは型付きの `private` プロパティに持つ。
 - リクエストの組み立てが繰り返されるなら `private function send(...)`（更新なら `update(...)`）にまとめる。`array_merge` や引数で上書きできるようにして、1 項目だけ変えるテストを書きやすくする。
-- コードの整形は `./vendor/bin/sail pint`。
 
 ## メソッド
 

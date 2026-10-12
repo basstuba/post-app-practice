@@ -20,18 +20,38 @@ COACHTECH の教材用の小さな Laravel 10 投稿アプリ（post-app）。Tu
 ./vendor/bin/sail artisan migrate --seed     # テーブル作成＋練習用データ
 ./vendor/bin/sail artisan migrate:fresh --seed  # DB を作り直す
 ./vendor/bin/sail pint                       # コード整形（laravel/pint）
+./vendor/bin/sail artisan test               # 全テスト
+./vendor/bin/sail artisan test --filter=メソッド名またはクラス名  # 単一テスト
+./vendor/bin/sail artisan test tests/Feature/ExampleTest.php
 ```
 
 - 初回起動直後の `migrate` で「Connection refused」が出るのは MySQL の起動待ち。少し待って再実行する。
 
-練習用アカウント（`--seed`）：`usera@example.com` / `userb@example.com`、パスワードはどちらも `password`。シーダーはユーザー 7 人（上の 2 人＋`mio`・`sota`・`yui`・`kento`・`akari` の `@example.com`、パスワードは同じ）、ポスト 25 件（usera・userb は各 4 件）、カテゴリ 3 件（お知らせ・技術メモ・雑記）を入れる。リプライは入れない。
+練習用アカウント（`--seed`）：`usera@example.com` / `userb@example.com`、パスワードはどちらも `password`。
 
 ## 作業の決まり
 
 依頼文に毎回書かなくてよい前提。依頼で個別に指定があればそちらを優先する。
 
-- **変えないもの**：機能追加・修正では、タイムライン（`posts.index`）の今の動きを変えない。今の動きは「全ポストを新しい順（`latest()`）に、ページ分けなしで並べる」で、一覧に出る項目・並び順・リンク先も含む。追加する機能のためにここを変える必要が出たら、変えずに止めて確認する。依頼に「変えないもの」が他にあれば、それも同様に守る。
+- **変えないもの**：機能追加・修正では、タイムライン（`posts.index`）の今の動きを壊さない。今の動きは「全ポストを新しい順（`latest()`）に、ページ分けなしで並べる」で、一覧に出る項目（既存のコードで今表示している項目）・並び順・リンク先も含む。追加する機能のためにここを変える必要が出たら、変えずに止めて確認する。依頼に「変えないもの」が他にあれば、それも同様に守る。
 - **入力チェックのメッセージは日本語**で出す。訳は `lang/ja/validation.php` に足し、使うルールと項目名が足りなければそこへ追加する。コントローラー内でメッセージを個別指定する場合も日本語にする。
+- **本文の文字数の上限は 140 字**。ポストとリプライで共通。`\r\n` は 1 字として数える。
+
+### 設計書の型
+
+機能追加の設計書（`docs/<機能名>.md`）は毎回次の見出し・順で、日本語で書く。該当しない節も見出しは残し、「〜は無い」と一言書く。
+
+書く時点の先頭は `# <機能名>機能 設計書`、その下に `Issue: <URL>`。以下は `##`、括弧内は `###`。
+
+1. **概要**（決めたこと／範囲外の付随作業があれば「付随して行うこと(機能の範囲外)」）
+2. **受け入れ条件**
+3. **変えないもの**：上の「変えないもの」と依頼で指定されたものを書く（実装時に修正が必要になる、要件の範囲外の場所があれば「言語設定による変化」のように小見出しで分ける）。
+4. **増えるテーブル**（ER図／テーブルに入れる値／追加・変更されるクラス(コードはまだ書かない)）
+5. **増える画面**（画面ごと／既存画面の変更(新しい画面ではない)／画面遷移／ルート）
+6. **入力チェックとメッセージ一覧**（入力チェック／メッセージ一覧）
+7. **テスト観点**（受け入れ条件に対応するもの／境界・認可・その他／既存の動きが変わっていないことの確認。付随作業があればその確認も末尾に足す）
+
+注記は、機能の実装が完了してから書く。ファイルの先頭（タイトルの前）に `> この設計書は、この機能を実装した時点の記録です。このあとは更新していません。` を足す。書く時点では足さない。
 
 ### PR 本文の型
 
@@ -45,10 +65,8 @@ PR 本文は毎回次の見出し・順で、日本語で書く。
 
 ## アーキテクチャ
 
-- **認証は Laravel Fortify**（自前の認証コントローラーはない）。`FortifyServiceProvider` でログイン／登録ビュー（`resources/views/auth/`）を指定し、登録処理は `app/Actions/Fortify/CreateNewUser.php` がバリデーションとユーザー作成を担う。有効な機能は `config/fortify.php` の `features`（registration・resetPasswords のみ）。ログイン後の遷移先は `config/fortify.php` の `'home' => '/posts'`。
-- **投稿機能**は `routes/web.php` の `auth` ミドルウェアグループ内のみ：一覧・詳細（`posts.show`）・新規作成（`posts.create` / `posts.store`）・編集・更新・削除（`PostController`）。新規作成は専用画面（`resources/views/posts/create.blade.php`、編集画面と同じ作り）で、入口はタイムラインのヘッダーの「ポストを書く」リンク。タイトル・トピック・本文を受け取り、投稿者は入力ではなくログイン中のユーザーから決める。`GET /posts/create` は `posts.show` より前に書く（後ろだと `{post}` に取られて404になる）。トピックは「選択してください」（空）が先頭で、未選択はエラー。送信後はタイムラインに戻る。入力チェックは更新と同じ内容で `PostController` 内に持つ（`store` と `update` で共通のルールメソッド）。
-- **リプライ機能**：ポスト詳細（`resources/views/posts/show.blade.php`）にリプライの一覧と送信フォームがある。`ReplyController` が送信（`replies.store`、`POST /posts/{post}/replies`）と削除（`replies.destroy`、`DELETE /replies/{reply}`）を担い、どちらも送信・削除後はポスト詳細へ戻る。リプライは平らな一覧で古い順（`created_at`、`id`）、本文は必須・140字以内（`\r\n` を `\n` にそろえてから数える。ポストの `update` と同じ）。
-- **認可は `PostPolicy`**（投稿者本人のみ update / delete 可）と `ReplyPolicy`（投稿者本人のみ delete 可。ポストの持ち主でも他人のリプライは消せない）。`AuthServiceProvider::$policies` は空で、ポリシーは命名規約による自動検出で `Post`・`Reply` に紐づく。コントローラーは各アクションで `$this->authorize()` を呼び、他人の投稿・リプライは 403。ビュー側も `@can` でボタンの表示を切り替える。
-- **データ**：`users` 1—* `posts` *—1 `categories`、`users` 1—* `replies` *—1 `posts`。`posts.user_id`、`replies.user_id`、`replies.post_id` は `cascadeOnDelete`（ユーザー・ポストを消すとリプライも消える）、`posts.category_id` は制約のみ。バリデーションはコントローラー内の `$request->validate()`（FormRequest は未使用）。Factory は `UserFactory`・`PostFactory`・`ReplyFactory`。
+- **投稿機能**：`GET /posts/create` は `posts.show` より前に書く（後ろだと `{post}` に取られて404になる）。
+- **認可**：ポリシーは命名規約による自動検出（`AuthServiceProvider::$policies` は空）。ポストの持ち主でも他人のリプライは消せない。
+- **データ**：バリデーションはコントローラー内の `$request->validate()`（FormRequest は未使用）。
 - **ビュー**は Blade の単独ファイルで、レイアウト継承なし・CSS は各ファイルの `<style>` にインライン（Vite / npm は実質未使用）。
 - **言語設定**：`config/app.php` の `locale` は `ja`（`fallback_locale` は `en`）。入力チェックの訳は `lang/ja/validation.php`（使っているルールと項目名のみ）。`auth.php`・`passwords.php`・`ja.json` は無いため、ログイン失敗・パスワード再設定・403/404 画面の文言は英語のまま。
