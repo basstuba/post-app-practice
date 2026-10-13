@@ -64,7 +64,8 @@ class PostEditedLabelTest extends TestCase
 
         $this->actingAs($this->user)->get(route('posts.index'))
             ->assertOk()
-            ->assertSeeInOrder(['直したタイトル', '編集済み'])
+            // 「編集済み」はヘッダー部（名前・時刻の並び）にあり、タイトルより前に出る
+            ->assertSeeInOrder(['編集済み', '直したタイトル'])
             ->assertDontSee('元のタイトル');
     }
 
@@ -205,6 +206,8 @@ class PostEditedLabelTest extends TestCase
             ->assertOk()
             ->assertSee('編集済み')
             ->assertDontSee(route('posts.edit', $this->post), false)
-            ->assertDontSee(route('posts.destroy', $this->post), false);
+            // posts.destroy の URL は「返信」リンク（posts.show）と同じなので、URL ではなく削除フォームの有無で確かめる
+            ->assertDontSee('削除')
+            ->assertDontSee('value="DELETE"', false);
     }
 }
