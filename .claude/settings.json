@@ -12,5 +12,20 @@
     "deny": [
       "Read(./.env*)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./vendor/bin/sail artisan test >&2 || exit 2",
+            "timeout": 300,
+            "statusMessage": "テストを実行中..."
+          }
+        ]
+      }
+    ]
   }
 }
