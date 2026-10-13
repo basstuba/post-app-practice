@@ -28,6 +28,12 @@ class Post extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function isEdited(): bool
+    {
+        // 列は足さず、作成後に更新されたか（updated_at が created_at より後か）で判断する
+        return $this->updated_at->gt($this->created_at);
+    }
+
     public function replies(): HasMany
     {
         // 古い順。同じ秒のリプライは id 順にして並びを安定させる
