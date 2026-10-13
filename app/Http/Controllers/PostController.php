@@ -13,6 +13,7 @@ class PostController extends Controller
 
     public function index()
     {
+        // 全ポストを投稿者・カテゴリごと新しい順に取得して、タイムラインに表示する
         $posts = Post::with(['user', 'category'])->latest()->get();
 
         return view('posts.index', compact('posts'));
@@ -70,6 +71,7 @@ class PostController extends Controller
     {
         $this->authorize('delete', $post);
 
+        // 自分のポストだけを削除して、タイムラインへ戻る
         $post->delete();
 
         return redirect()->route('posts.index');
