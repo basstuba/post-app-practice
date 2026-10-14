@@ -9,13 +9,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('likes', function (Blueprint $table) {
-            $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('post_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
 
-            // 同じユーザーが同じポストに付けられるいいねは 1 つまで
-            $table->unique(['user_id', 'post_id']);
+            // 同じユーザーが同じポストに付けられるいいねは 1 つまで（中間テーブルなので id は持たず、組を主キーにする）
+            $table->primary(['user_id', 'post_id']);
         });
     }
 

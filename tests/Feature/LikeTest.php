@@ -87,7 +87,7 @@ class LikeTest extends TestCase
             ->assertOk()
             ->assertSee('いいねを取り消す')
             ->assertDontSee('いいねする')
-            ->assertSee('like-btn liked', false)
+            ->assertSee('like-form liked', false)
             ->assertSee($this->likeCount(1), false);
     }
 
@@ -105,7 +105,7 @@ class LikeTest extends TestCase
             ->assertOk()
             ->assertSee('いいねする')
             ->assertDontSee('いいねを取り消す')
-            ->assertDontSee('like-btn liked', false)
+            ->assertDontSee('like-form liked', false)
             ->assertSee($this->likeCount(0), false);
     }
 
@@ -119,7 +119,7 @@ class LikeTest extends TestCase
             ->assertOk()
             ->assertSee('いいねする')
             ->assertDontSee('いいねを取り消す')
-            ->assertDontSee('like-btn liked', false)
+            ->assertDontSee('like-form liked', false)
             ->assertSee($this->likeCount(1), false);
 
         // さらに別のアカウントでも同じ
@@ -223,6 +223,30 @@ class LikeTest extends TestCase
             'user_id' => $this->user->id,
             'post_id' => $this->post->id,
         ]);
+    }
+
+    #[Test]
+    public function 同時に送られて先に別のリクエストが登録済みでも500にならずいいねは1つのまま(): void
+    {
+        // 自分の INSERT の直前に、別のリクエストが同じ組を入れ終えた状況を再現する
+        $raced = false;
+        DB::beforeExecuting(function (string $query) use (&$raced) {
+            if ($raced || ! str_starts_with($query, 'insert') || ! str_contains($query, '`likes`')) {
+                return;
+            }
+
+            $raced = true;
+            DB::table('likes')->insert([
+                'user_id' => $this->user->id,
+                'post_id' => $this->post->id,
+            ]);
+        });
+
+        $this->like()->assertRedirect(route('posts.index'));
+
+        $this->assertTrue($raced);
+        $this->assertDatabaseCount('likes', 1);
+        $this->assertDatabaseHas('likes', ['user_id' => $this->user->id, 'post_id' => $this->post->id]);
     }
 
     #[Test]
