@@ -56,7 +56,7 @@ class LikeTest extends TestCase
         return $this->actingAs($as ?? $this->user)->get(route('posts.index'));
     }
 
-    private function count(int $n): string
+    private function likeCount(int $n): string
     {
         return '<span class="like-count">'.$n.'</span>';
     }
@@ -71,7 +71,7 @@ class LikeTest extends TestCase
         $html = $this->timeline()->assertOk()->getContent();
 
         $this->assertSame(2, substr_count($html, 'いいねする'));
-        $this->assertSame(2, substr_count($html, $this->count(0)));
+        $this->assertSame(2, substr_count($html, $this->likeCount(0)));
         $this->assertSame(0, substr_count($html, 'いいねを取り消す'));
     }
 
@@ -88,7 +88,7 @@ class LikeTest extends TestCase
             ->assertSee('いいねを取り消す')
             ->assertDontSee('いいねする')
             ->assertSee('like-btn liked', false)
-            ->assertSee($this->count(1), false);
+            ->assertSee($this->likeCount(1), false);
     }
 
     #[Test]
@@ -106,7 +106,7 @@ class LikeTest extends TestCase
             ->assertSee('いいねする')
             ->assertDontSee('いいねを取り消す')
             ->assertDontSee('like-btn liked', false)
-            ->assertSee($this->count(0), false);
+            ->assertSee($this->likeCount(0), false);
     }
 
     #[Test]
@@ -120,13 +120,13 @@ class LikeTest extends TestCase
             ->assertSee('いいねする')
             ->assertDontSee('いいねを取り消す')
             ->assertDontSee('like-btn liked', false)
-            ->assertSee($this->count(1), false);
+            ->assertSee($this->likeCount(1), false);
 
         // さらに別のアカウントでも同じ
         $this->timeline(User::factory()->create())
             ->assertSee('いいねする')
             ->assertDontSee('いいねを取り消す')
-            ->assertSee($this->count(1), false);
+            ->assertSee($this->likeCount(1), false);
     }
 
     // --- 境界・認可・その他 ---
@@ -150,7 +150,7 @@ class LikeTest extends TestCase
 
         $this->assertDatabaseCount('likes', 3);
 
-        $this->timeline()->assertSee($this->count(3), false);
+        $this->timeline()->assertSee($this->likeCount(3), false);
     }
 
     #[Test]
@@ -171,10 +171,10 @@ class LikeTest extends TestCase
         $this->assertSame(1, substr_count($html, 'いいねを取り消す'));
         $this->assertSame(1, substr_count($html, 'いいねする'));
         // 並びは新しい順。新しい方（押していない・0）が先、古い方（押している・1）が後
-        $this->assertSame(1, substr_count($html, $this->count(1)));
-        $this->assertSame(1, substr_count($html, $this->count(0)));
+        $this->assertSame(1, substr_count($html, $this->likeCount(1)));
+        $this->assertSame(1, substr_count($html, $this->likeCount(0)));
         $this->assertLessThan(strpos($html, 'いいねを取り消す'), strpos($html, 'いいねする'));
-        $this->assertLessThan(strpos($html, $this->count(1)), strpos($html, $this->count(0)));
+        $this->assertLessThan(strpos($html, $this->likeCount(1)), strpos($html, $this->likeCount(0)));
         $this->assertModelExists($newer);
     }
 
@@ -185,7 +185,7 @@ class LikeTest extends TestCase
         $this->like()->assertRedirect(route('posts.index'));
 
         $this->assertDatabaseCount('likes', 1);
-        $this->timeline()->assertSee($this->count(1), false);
+        $this->timeline()->assertSee($this->likeCount(1), false);
     }
 
     #[Test]
@@ -209,7 +209,7 @@ class LikeTest extends TestCase
 
         $this->assertDatabaseCount('likes', 1);
         $this->assertDatabaseHas('likes', ['user_id' => $this->other->id, 'post_id' => $this->post->id]);
-        $this->timeline()->assertSee($this->count(1), false);
+        $this->timeline()->assertSee($this->likeCount(1), false);
     }
 
     #[Test]
