@@ -36,6 +36,11 @@
         .post-actions a:hover { color: #0F1419; text-decoration: underline; text-underline-offset: 3px; }
         .post-actions button:hover { color: #D6402C; text-decoration: underline; text-underline-offset: 3px; }
         .post-actions a:focus-visible, .post-actions button:focus-visible { outline: 2px solid #E8792B; outline-offset: 2px; border-radius: 4px; }
+        .post-actions .like-form { display: inline-flex; align-items: center; gap: 0.35rem; }
+        .post-actions .like-btn:hover { color: #D6402C; text-decoration: underline; text-underline-offset: 3px; }
+        .post-actions .like-btn.liked { color: #D6402C; font-weight: 800; }
+        .post-actions .like-count { color: #5B6570; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+        .post-actions .like-form.liked .like-count { color: #D6402C; font-weight: 800; }
         .page-title-row { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; padding-right: 1rem; }
         .page-title-row .page-title { padding-right: 0; }
         .write-link { background: #0F1419; color: #fff; padding: 0.38rem 1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
@@ -115,6 +120,20 @@
                             <p class="post-text">{{ $post->content }}</p>
                             <div class="post-actions">
                                 <a href="{{ route('posts.show', $post) }}">返信</a>
+                                @if($post->liked_by_me)
+                                    <form action="{{ route('likes.destroy', $post) }}" method="POST" class="like-form liked">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="like-btn liked" aria-pressed="true">いいねを取り消す</button>
+                                        <span class="like-count">{{ $post->liked_by_count }}</span>
+                                    </form>
+                                @else
+                                    <form action="{{ route('likes.store', $post) }}" method="POST" class="like-form">
+                                        @csrf
+                                        <button type="submit" class="like-btn" aria-pressed="false">いいねする</button>
+                                        <span class="like-count">{{ $post->liked_by_count }}</span>
+                                    </form>
+                                @endif
                                 @can('update', $post)
                                     <a href="{{ route('posts.edit', $post) }}">編集</a>
                                 @endcan
