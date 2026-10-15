@@ -572,7 +572,8 @@ class PostSearchTest extends TestCase
         $this->search(['q' => '検索語'])
             ->assertOk()
             ->assertDontSee(route('posts.edit', $theirs), false)
-            ->assertDontSee(route('posts.destroy', $theirs), false)
+            // posts.destroy の URL は「返信」リンク（posts.show）と同じなので、削除フォームの action 属性で確かめる
+            ->assertDontSee('action="'.route('posts.destroy', $theirs).'"', false)
             ->assertSee(route('posts.edit', $mine), false)
             ->assertSee(route('likes.store', $theirs), false)
             ->assertSee(route('bookmarks.store', $theirs), false)
@@ -747,9 +748,10 @@ class PostSearchTest extends TestCase
         $this->search()
             ->assertOk()
             ->assertSee(route('posts.edit', $mine), false)
-            ->assertSee(route('posts.destroy', $mine), false)
+            // posts.destroy の URL は「返信」リンク（posts.show）と同じなので、削除フォームの action 属性で確かめる
+            ->assertSee('action="'.route('posts.destroy', $mine).'"', false)
             ->assertDontSee(route('posts.edit', $theirs), false)
-            ->assertDontSee(route('posts.destroy', $theirs), false);
+            ->assertDontSee('action="'.route('posts.destroy', $theirs).'"', false);
     }
 
     #[Test]
