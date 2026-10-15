@@ -41,6 +41,11 @@
         .post-actions .like-form.liked .like-btn { color: #D6402C; font-weight: 800; }
         .post-actions .like-count { color: #5B6570; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
         .post-actions .like-form.liked .like-count { color: #D6402C; font-weight: 800; }
+        .post-actions .bookmark-form { display: inline-flex; align-items: center; }
+        .post-actions .bookmark-btn { display: inline-flex; align-items: center; line-height: 0; }
+        .post-actions .bookmark-btn svg { width: 18px; height: 18px; display: block; }
+        .post-actions .bookmark-btn:hover { color: #0F1419; text-decoration: none; }
+        .post-actions .bookmark-btn.bookmarked { color: #2F5AA8; }
         .page-title-row { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; padding-right: 1rem; }
         .page-title-row .page-title { padding-right: 0; }
         .write-link { background: #0F1419; color: #fff; padding: 0.38rem 1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
@@ -150,6 +155,16 @@
                                     @endif
                                     <button type="submit" class="like-btn">{{ $liked ? 'いいねを取り消す' : 'いいねする' }}</button>
                                     <span class="like-count">{{ $post->liked_by_count }}</span>
+                                </form>
+                                @php $bookmarked = $post->bookmarked_by_me; @endphp
+                                <form action="{{ route($bookmarked ? 'bookmarks.destroy' : 'bookmarks.store', $post) }}" method="POST" class="bookmark-form">
+                                    @csrf
+                                    @if($bookmarked)
+                                        @method('DELETE')
+                                    @endif
+                                    <button type="submit" class="bookmark-btn{{ $bookmarked ? ' bookmarked' : '' }}" aria-label="{{ $bookmarked ? 'ブックマークを外す' : 'ブックマークする' }}" title="{{ $bookmarked ? 'ブックマークを外す' : 'ブックマークする' }}">
+                                        <svg viewBox="0 0 24 24" fill="{{ $bookmarked ? '#2F5AA8' : 'none' }}" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.5L5 21V4a1 1 0 0 1 1-1z"/></svg>
+                                    </button>
                                 </form>
                                 @can('update', $post)
                                     <a href="{{ route('posts.edit', $post) }}">編集</a>

@@ -21,9 +21,11 @@ class PostController extends Controller
 
         // 全ポストを投稿者・カテゴリごと新しい順に取得して、タイムラインに表示する
         // いいねの数と、ログイン中のユーザーが押しているかも一緒に取得する
+        // ブックマークは、ログイン中のユーザーが付けているかだけを取得する（他人の分・数は取得しない）
         $posts = Post::with(['user', 'category', 'tags'])
             ->withCount('likedBy')
             ->withExists(['likedBy as liked_by_me' => fn ($query) => $query->where('users.id', auth()->id())])
+            ->withExists(['bookmarkedBy as bookmarked_by_me' => fn ($query) => $query->where('users.id', auth()->id())])
             ->when($tag, fn ($query) => $query->whereHas('tags', fn ($query) => $query->where('tags.id', $tag->id)))
             ->latest()
             ->get();
