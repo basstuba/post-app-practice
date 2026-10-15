@@ -251,6 +251,28 @@ class TagTest extends TestCase
     }
 
     #[Test]
+    public function tagsに空文字を送って作成するとタグ0件として保存される(): void
+    {
+        $this->send(['tags' => ''])->assertRedirect(route('posts.index'));
+
+        $this->assertDatabaseCount('posts', 1);
+        $this->assertDatabaseCount('post_tag', 0);
+    }
+
+    #[Test]
+    public function tagsに空文字を送って更新するとタグが0件になりタグ自体は残る(): void
+    {
+        $post = $this->postWithTags([0, 1], ['title' => '元のタイトル']);
+
+        $this->update($post, ['title' => '変えたタイトル', 'tags' => ''])
+            ->assertRedirect(route('posts.index'));
+
+        $this->assertDatabaseHas('posts', ['id' => $post->id, 'title' => '変えたタイトル']);
+        $this->assertDatabaseCount('post_tag', 0);
+        $this->assertDatabaseCount('tags', 5);
+    }
+
+    #[Test]
     public function tagsの要素が整数でないと日本語のエラーになり保存されない(): void
     {
         $this->send(['tags' => ['abc']])

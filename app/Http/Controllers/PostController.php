@@ -108,8 +108,8 @@ class PostController extends Controller
             'title' => 'required|string|max:255',
             'content' => $this->contentRules(),
             'category_id' => 'required|exists:categories,id',
-            // 送られなければ（全部外した場合も）0 件として扱う
-            'tags' => 'array',
+            // 送られなければ（全部外した場合も）、tags=（空）が送られた場合も 0 件として扱う
+            'tags' => 'nullable|array',
             'tags.*' => 'bail|required|integer|distinct|exists:tags,id',
         ];
     }
