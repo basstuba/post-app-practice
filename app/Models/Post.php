@@ -34,6 +34,12 @@ class Post extends Model
         return $this->belongsToMany(User::class, 'likes')->withTimestamps();
     }
 
+    public function tags(): BelongsToMany
+    {
+        // タグの id 順
+        return $this->belongsToMany(Tag::class)->orderBy('tags.id');
+    }
+
     public function isEdited(): bool
     {
         // 列は足さず、作成後に更新されたか（updated_at が created_at より後か）で判断する

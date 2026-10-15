@@ -27,6 +27,9 @@
         .btn-secondary { background: #FFFFFF; color: #0F1419; border: 1px solid #D3D9DE; }
         .btn-secondary:hover { background: #F7F8F9; }
         .btn:focus-visible { outline: 2px solid #E8792B; outline-offset: 2px; }
+        .tag-options { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
+        .tag-options label { display: inline-flex; align-items: center; gap: 0.3rem; margin-bottom: 0; color: #0F1419; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+        .tag-options input { width: auto; }
         .error { color: #D6402C; font-size: 0.83rem; margin-top: 0.3rem; }
         .counter { text-align: right; color: #5B6570; font-size: 0.8rem; margin-top: 0.3rem; }
         .counter.over { color: #D6402C; font-weight: 700; }
@@ -76,6 +79,18 @@
                     @error('content')
                         <p class="error">{{ $message }}</p>
                     @enderror
+                </div>
+
+                <div class="form-group">
+                    <label>タグ</label>
+                    <div class="tag-options">
+                        @foreach ($tags as $tag)
+                            <label><input type="checkbox" name="tags[]" value="{{ $tag->id }}" @checked(in_array($tag->id, (array) old('tags', [])))>#{{ $tag->name }}</label>
+                        @endforeach
+                    </div>
+                    @foreach (collect($errors->get('tags'))->merge($errors->get('tags.*'))->flatten()->unique() as $message)
+                        <p class="error">{{ $message }}</p>
+                    @endforeach
                 </div>
 
                 <div class="actions">
