@@ -17,6 +17,7 @@ return [
     'distinct' => ':attributeが重複しています。',
     'email' => ':attributeは正しいメールアドレスの形式で入力してください。',
     'exists' => '選択された:attributeは正しくありません。',
+    'in' => '選択された:attributeは正しくありません。',
     'integer' => ':attributeは整数で入力してください。',
     'max' => [
         'string' => ':attributeは:max文字以内で入力してください。',
@@ -50,6 +51,9 @@ return [
         'category_id' => 'トピック',
         'tags' => 'タグ',
         'tags.*' => 'タグ',
+        'q' => 'キーワード',
+        'bookmarked' => 'ブックマークの絞り込み',
+        'category' => 'トピック',
     ],
 
 ];
