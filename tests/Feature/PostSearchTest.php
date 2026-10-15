@@ -490,6 +490,99 @@ class PostSearchTest extends TestCase
     }
 
     #[Test]
+    public function 戻り先の指定が無くても入力エラーは検索欄のある一覧に戻る(): void
+    {
+        $this->actingAs($this->user)->get(route('posts.index', ['q' => str_repeat('あ', 101)]))
+            ->assertRedirect(route('posts.index'))
+            ->assertSessionHasErrors(['q' => 'キーワードは100文字以内で入力してください。']);
+    }
+
+    #[Test]
+    public function 一覧以外のページから入力エラーにしても検索欄のある一覧に戻る(): void
+    {
+        $this->actingAs($this->user)->from(route('posts.create'))
+            ->get(route('posts.index', ['q' => str_repeat('あ', 101)]))
+            ->assertRedirect(route('posts.index'))
+            ->assertSessionHasErrors('q');
+
+        // 戻り先に不正な値を付けた画面からでも、自分自身へは戻らない
+        $this->actingAs($this->user)->from(route('posts.index', ['bookmarked' => 'abc']))
+            ->get(route('posts.index', ['bookmarked' => 'abc']))
+            ->assertRedirect(route('posts.index'))
+            ->assertSessionHasErrors('bookmarked');
+    }
+
+    #[Test]
+    public function タグを選んだまま入力エラーにするとタグを引き継いで一覧に戻る(): void
+    {
+        $tag = Tag::factory()->create(['name' => 'laravel']);
+
+        $this->actingAs($this->user)->from(route('posts.create'))
+            ->get(route('posts.index', ['tag' => $tag->id, 'q' => str_repeat('あ', 101)]))
+            ->assertRedirect(route('posts.index', ['tag' => $tag->id]))
+            ->assertSessionHasErrors('q');
+    }
+
+    #[Test]
+    public function チェックを外してエラーにすると戻った画面でもチェックは外れている(): void
+    {
+        // チェックを外した送信には bookmarked が含まれない。戻り先が ?bookmarked=1 の画面でも
+        $this->actingAs($this->user)->from(route('posts.index', ['bookmarked' => 1]))
+            ->get(route('posts.index', ['q' => str_repeat('あ', 101), 'category' => '']))
+            ->assertRedirect(route('posts.index'))
+            ->assertSessionHasErrors('q');
+
+        $this->actingAs($this->user)->get(route('posts.index'))
+            ->assertOk()
+            ->assertDontSee('name="bookmarked" value="1" checked', false);
+    }
+
+    #[Test]
+    public function エラーで戻った画面ではbookmarkedが無ければ既定値ではなく送信値の通りにチェックが外れる(): void
+    {
+        // old がある（エラーで戻ってきた）状態で、bookmarked を含まない送信だったことを再現する
+        $this->withSession(['_old_input' => ['q' => 'あ', 'category' => '']])
+            ->actingAs($this->user)
+            ->get(route('posts.index', ['bookmarked' => 1]))
+            ->assertOk()
+            ->assertDontSee('name="bookmarked" value="1" checked', false);
+
+        // チェックを付けて送ったときは、戻った画面でもチェックが入っている
+        $this->withSession(['_old_input' => ['q' => 'あ', 'bookmarked' => '1']])
+            ->actingAs($this->user)
+            ->get(route('posts.index'))
+            ->assertOk()
+            ->assertSee('name="bookmarked" value="1" checked', false);
+    }
+
+    #[Test]
+    public function 不正なUTF8のキーワードは絞り込まずエラーになり一覧は出ない(): void
+    {
+        $this->makePost('一覧に出るはずのポスト');
+
+        // %FF は UTF-8 として不正なバイト
+        $this->actingAs($this->user)->from(route('posts.index'))->get(route('posts.index').'?q=%FF')
+            ->assertRedirect(route('posts.index'))
+            ->assertSessionHasErrors(['q' => 'キーワードに使えない文字が含まれています。']);
+
+        $this->actingAs($this->user)->get(route('posts.index'))
+            ->assertOk()
+            ->assertSee('キーワードに使えない文字が含まれています。')
+            ->assertDontSee('validation.')
+            ->assertDontSee('一覧に出るはずのポスト')
+            ->assertDontSee(self::NO_POST)
+            ->assertDontSee(self::NO_MATCH);
+    }
+
+    #[Test]
+    public function 不正なUTF8が前後の空白に挟まれていてもエラーになる(): void
+    {
+        $this->actingAs($this->user)->get(route('posts.index').'?q=%20%FF%20')
+            ->assertRedirect(route('posts.index'))
+            ->assertSessionHasErrors(['q' => 'キーワードに使えない文字が含まれています。']);
+    }
+
+    #[Test]
     #[DataProvider('存在しないトピックの値')]
     public function 存在しないトピックを指定すると404になる(string|array $value): void
     {

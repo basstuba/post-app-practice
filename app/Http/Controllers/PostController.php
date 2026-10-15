@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class PostController extends Controller
 {
@@ -27,10 +28,20 @@ class PostController extends Controller
 
         $this->normalizeKeyword($request);
 
-        $validated = $request->validate([
-            'q' => ['bail', 'nullable', 'string', 'max:'.self::KEYWORD_MAX],
-            'bookmarked' => ['nullable', Rule::in(['1'])],
-        ]);
+        try {
+            $validated = $request->validate([
+                'q' => [
+                    'bail', 'nullable', 'string',
+                    // 不正な UTF-8（?q=%FF など）は、絞り込みも文字数の確認もできないのでエラーにする
+                    fn ($attribute, $value, $fail) => mb_check_encoding($value, 'UTF-8') ? null : $fail('validation.utf8')->translate(),
+                    'max:'.self::KEYWORD_MAX,
+                ],
+                'bookmarked' => ['nullable', Rule::in(['1'])],
+            ]);
+        } catch (ValidationException $e) {
+            // エラーは、検索欄のある一覧に戻して見せる（直前のページには戻さない）。選んでいるタグは引き継ぐ
+            throw $e->redirectTo(route('posts.index', array_filter(['tag' => $tag?->id])));
+        }
 
         // 空（空白だけだった場合を含む）は指定なし
         $keyword = ($validated['q'] ?? '') === '' ? null : $validated['q'];
@@ -63,7 +74,10 @@ class PostController extends Controller
         $keywordInput = is_string($oldKeyword) ? $oldKeyword : '';
         $oldCategory = old('category', $category?->id);
         $selectedCategoryId = is_scalar($oldCategory) ? (string) $oldCategory : '';
-        $bookmarkedChecked = old('bookmarked', $bookmarkedOnly ? '1' : null) === '1';
+        // エラーで戻ったとき（old がある）は、チェックを外して送った場合も送信値の通りにする。外すと bookmarked は送られない
+        $bookmarkedChecked = $request->old() === []
+            ? $bookmarkedOnly
+            : $request->old('bookmarked') === '1';
 
         // 条件が付いているか（「条件をクリア」の表示と、0 件のときの文言の出し分けに使う）
         $hasSearch = $keyword !== null || $category !== null || $bookmarkedOnly;
@@ -192,13 +206,14 @@ class PostController extends Controller
 
     /**
      * キーワードの前後の空白（半角・全角）を取り除く。100 字の数え方も取り除いたあとの文字数。
-     * 文字列以外（配列など）はそのまま残し、バリデーションの string ルールで弾く。
+     * 文字列以外（配列など）と不正な UTF-8 はそのまま残し、バリデーションで弾く。
      */
     private function normalizeKeyword(Request $request): void
     {
         $keyword = $request->input('q');
 
-        if (is_string($keyword)) {
+        // 不正な UTF-8 は正規表現で null になってしまうので触らず、バリデーションで弾く
+        if (is_string($keyword) && mb_check_encoding($keyword, 'UTF-8')) {
             $request->merge(['q' => preg_replace('/^[\s\x{3000}]+|[\s\x{3000}]+$/u', '', $keyword)]);
         }
     }
