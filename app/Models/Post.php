@@ -34,6 +34,11 @@ class Post extends Model
         return $this->belongsToMany(User::class, 'likes')->withTimestamps();
     }
 
+    public function bookmarkedBy(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'bookmarks')->withTimestamps();
+    }
+
     public function tags(): BelongsToMany
     {
         // タグの id 順

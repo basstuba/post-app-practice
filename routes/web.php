@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReplyController;
@@ -21,6 +22,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::post('/posts/{post}/like', [LikeController::class, 'store'])->name('likes.store');
     Route::delete('/posts/{post}/like', [LikeController::class, 'destroy'])->name('likes.destroy');
+    Route::post('/posts/{post}/bookmark', [BookmarkController::class, 'store'])->name('bookmarks.store');
+    Route::delete('/posts/{post}/bookmark', [BookmarkController::class, 'destroy'])->name('bookmarks.destroy');
     Route::post('/posts/{post}/replies', [ReplyController::class, 'store'])->name('replies.store');
     Route::delete('/replies/{reply}', [ReplyController::class, 'destroy'])->name('replies.destroy');
 });
