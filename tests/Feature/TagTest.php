@@ -367,7 +367,8 @@ class TagTest extends TestCase
             ->assertSee('#Laravel')
             ->getContent();
 
-        $this->assertSame(1, substr_count($html, 'aria-current'));
+        // <style> 内のセレクタ a[aria-current] を数えないよう、属性値つきで数える
+        $this->assertSame(1, substr_count($html, 'aria-current="true"'));
         $this->assertMatchesRegularExpression(
             '/href="[^"]*tag='.$this->tags[1]->id.'"\s+aria-current="true"/',
             $html
@@ -502,7 +503,7 @@ class TagTest extends TestCase
     public function TagSeederは5件を仕様どおりの名前で入れ他のデータは増やさない(): void
     {
         $this->assertSame(['Laravel', '雑談', '暮らし', 'つまずき', '質問'], Tag::orderBy('id')->pluck('name')->all());
-        $this->assertSame([1, 2, 3, 4, 5], Tag::orderBy('id')->pluck('id')->all());
+        // id の値は見ない。ロールバックしても AUTO_INCREMENT は戻らず、1〜5 になるとは限らない
         $this->assertDatabaseCount('users', 1);
         $this->assertDatabaseCount('categories', 1);
         $this->assertDatabaseCount('posts', 0);
