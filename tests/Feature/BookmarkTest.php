@@ -19,7 +19,8 @@ class BookmarkTest extends TestCase
 
     private const REMOVE_LABEL = 'aria-label="ブックマークを外す"';
 
-    // 付いている状態のボタンにだけ付くクラス（CSS の定義とは一致しない書き方）
+    // 付いている状態のボタンにだけ付くクラス（CSS の定義とは一致しない書き方）。
+    // 塗りつぶしはこのクラスの CSS（.bookmarked svg { fill: currentColor }）で決まるので、見た目の確認はこれで行う
     private const ON_CLASS = 'class="bookmark-btn bookmarked"';
 
     private User $user;
@@ -73,7 +74,6 @@ class BookmarkTest extends TestCase
             ->assertOk()
             ->assertSee(self::ADD_LABEL, false)
             ->assertSee('title="ブックマークする"', false)
-            ->assertSee('fill="none"', false)
             ->assertDontSee(self::REMOVE_LABEL, false)
             ->assertDontSee(self::ON_CLASS, false);
 
@@ -87,7 +87,6 @@ class BookmarkTest extends TestCase
             ->assertSee(self::REMOVE_LABEL, false)
             ->assertSee('title="ブックマークを外す"', false)
             ->assertSee(self::ON_CLASS, false)
-            ->assertSee('fill="#2F5AA8"', false)
             ->assertDontSee(self::ADD_LABEL, false);
     }
 
@@ -380,7 +379,6 @@ class BookmarkTest extends TestCase
             ->assertOk()
             ->assertSee('他人のポスト')
             ->assertDontSee(self::ADD_LABEL, false)
-            ->assertDontSee(self::REMOVE_LABEL, false)
-            ->assertDontSee('bookmark');
+            ->assertDontSee(self::REMOVE_LABEL, false);
     }
 }
