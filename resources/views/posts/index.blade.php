@@ -61,6 +61,18 @@
         .post-tags a { color: #2F5AA8; font-size: 0.85rem; font-weight: 600; }
         .post-tags a:hover { text-decoration: underline; text-underline-offset: 3px; }
         .empty { color: #5B6570; text-align: center; padding: 3.5rem 1rem; }
+        .search { display: flex; flex-direction: column; gap: 0.7rem; padding: 0.8rem 1rem; border-bottom: 1px solid #EFF1F4; }
+        .search label { display: block; color: #5B6570; margin-bottom: 0.3rem; font-size: 0.78rem; font-weight: 700; }
+        .search input[type="text"], .search select { width: 100%; padding: 0.55rem 0.75rem; border: 1px solid #D3D9DE; border-radius: 10px; font-size: 0.9rem; font-family: inherit; background: #fff; color: #0F1419; }
+        .search input[type="text"]:focus, .search select:focus { outline: none; border-color: #0F1419; box-shadow: 0 0 0 3px rgba(232, 121, 43, 0.18); }
+        .search .check { display: inline-flex; align-items: center; gap: 0.4rem; margin-bottom: 0; color: #0F1419; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+        .search .search-actions { display: flex; align-items: center; gap: 1rem; }
+        .search .search-btn { background: #0F1419; color: #fff; border: none; padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; cursor: pointer; font-family: inherit; }
+        .search .search-btn:hover { background: #272C30; }
+        .search .search-btn:focus-visible, .search .clear-link:focus-visible { outline: 2px solid #E8792B; outline-offset: 2px; }
+        .search .clear-link { color: #5B6570; font-size: 0.8rem; font-weight: 600; }
+        .search .clear-link:hover { color: #0F1419; text-decoration: underline; text-underline-offset: 3px; }
+        .search .error { color: #D6402C; font-size: 0.83rem; margin-top: 0.3rem; }
     </style>
 </head>
 <body>
@@ -83,6 +95,40 @@
         </header>
 
         <main class="feed">
+            <form action="{{ route('posts.index') }}" method="GET" class="search" role="search" aria-label="ポストを検索する">
+                <div>
+                    <label for="q">キーワード</label>
+                    <input type="text" id="q" name="q" value="{{ $keywordInput }}">
+                    @error('q')
+                        <p class="error">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="category">トピック</label>
+                    <select id="category" name="category">
+                        <option value="">すべてのトピック</option>
+                        @foreach ($categories as $c)
+                            <option value="{{ $c->id }}" @selected($selectedCategoryId === (string) $c->id)>{{ $c->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="check"><input type="checkbox" name="bookmarked" value="1" @checked($bookmarkedChecked)>ブックマークしたポストだけ</label>
+                    @error('bookmarked')
+                        <p class="error">{{ $message }}</p>
+                    @enderror
+                </div>
+                @if($tag)
+                    <input type="hidden" name="tag" value="{{ $tag->id }}">
+                @endif
+                <div class="search-actions">
+                    <button type="submit" class="search-btn">検索</button>
+                    @if($hasSearch || $tag)
+                        <a href="{{ route('posts.index') }}" class="clear-link">条件をクリア</a>
+                    @endif
+                </div>
+            </form>
+
             <nav class="tag-filter" aria-label="タグで絞り込む">
                 <a href="{{ route('posts.index') }}">すべて</a>
                 @foreach ($tags as $t)
@@ -90,8 +136,18 @@
                 @endforeach
             </nav>
 
-            @if($posts->isEmpty())
-                <p class="empty">{{ $tag ? 'このタグのポストはありません。' : 'まだポストがありません。' }}</p>
+            @if($errors->hasAny(['q', 'bookmarked']))
+                {{-- 検索条件が正しくないときは、一覧も案内も出さない（エラーは検索欄に出ている） --}}
+            @elseif($posts->isEmpty())
+                <p class="empty">
+                    @if($hasSearch)
+                        条件に合うポストはありません。
+                    @elseif($tag)
+                        このタグのポストはありません。
+                    @else
+                        まだポストがありません。
+                    @endif
+                </p>
             @else
                 @php
                     // アイコンの色は登録した名前から決まる（crc32 % 18）
