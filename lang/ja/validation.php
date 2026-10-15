@@ -12,9 +12,12 @@ return [
     |
     */
 
+    'array' => ':attributeの形式が正しくありません。',
     'confirmed' => ':attributeが確認用の入力と一致しません。',
+    'distinct' => ':attributeが重複しています。',
     'email' => ':attributeは正しいメールアドレスの形式で入力してください。',
     'exists' => '選択された:attributeは正しくありません。',
+    'integer' => ':attributeは整数で入力してください。',
     'max' => [
         'string' => ':attributeは:max文字以内で入力してください。',
     ],
@@ -45,6 +48,8 @@ return [
         'title' => 'タイトル',
         'content' => '本文',
         'category_id' => 'トピック',
+        'tags' => 'タグ',
+        'tags.*' => 'タグ',
     ],
 
 ];

@@ -46,6 +46,14 @@
         .write-link { background: #0F1419; color: #fff; padding: 0.38rem 1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
         .write-link:hover { background: #272C30; }
         .write-link:focus-visible { outline: 2px solid #E8792B; outline-offset: 2px; }
+        .tag-filter { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.7rem 1rem; border-bottom: 1px solid #EFF1F4; }
+        .tag-filter a { border: 1px solid #D3D9DE; border-radius: 999px; padding: 0.2rem 0.8rem; font-size: 0.8rem; font-weight: 600; color: #5B6570; }
+        .tag-filter a:hover { background: #F7F8F9; }
+        .tag-filter a[aria-current] { background: #0F1419; border-color: #0F1419; color: #fff; font-weight: 700; }
+        .tag-filter a:focus-visible, .post-tags a:focus-visible { outline: 2px solid #E8792B; outline-offset: 2px; }
+        .post-tags { display: flex; flex-wrap: wrap; gap: 0.2rem 0.6rem; margin-top: 0.35rem; }
+        .post-tags a { color: #2F5AA8; font-size: 0.85rem; font-weight: 600; }
+        .post-tags a:hover { text-decoration: underline; text-underline-offset: 3px; }
         .empty { color: #5B6570; text-align: center; padding: 3.5rem 1rem; }
     </style>
 </head>
@@ -69,8 +77,15 @@
         </header>
 
         <main class="feed">
+            <nav class="tag-filter" aria-label="タグで絞り込む">
+                <a href="{{ route('posts.index') }}">すべて</a>
+                @foreach ($tags as $t)
+                    <a href="{{ route('posts.index', ['tag' => $t->id]) }}" @if($tag && $tag->id === $t->id) aria-current="true" @endif>#{{ $t->name }}</a>
+                @endforeach
+            </nav>
+
             @if($posts->isEmpty())
-                <p class="empty">まだポストがありません。</p>
+                <p class="empty">{{ $tag ? 'このタグのポストはありません。' : 'まだポストがありません。' }}</p>
             @else
                 @php
                     // アイコンの色は登録した名前から決まる（crc32 % 18）
@@ -118,6 +133,13 @@
                             </div>
                             <p class="post-title">{{ $post->title }}</p>
                             <p class="post-text">{{ $post->content }}</p>
+                            @if($post->tags->isNotEmpty())
+                                <div class="post-tags">
+                                    @foreach ($post->tags as $postTag)
+                                        <a href="{{ route('posts.index', ['tag' => $postTag->id]) }}">#{{ $postTag->name }}</a>
+                                    @endforeach
+                                </div>
+                            @endif
                             <div class="post-actions">
                                 <a href="{{ route('posts.show', $post) }}">返信</a>
                                 @php $liked = $post->liked_by_me; @endphp

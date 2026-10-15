@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(TagSeeder::class);
+
         // トピック（カテゴリ）
         $notice = Category::create(['name' => 'お知らせ']);
         $tech = Category::create(['name' => '技術メモ']);

@@ -30,6 +30,8 @@
         .topic { margin-left: auto; border-radius: 999px; padding: 0.1rem 0.6rem; font-size: 0.7rem; font-weight: 700; }
         .post-title { font-weight: 700; font-size: 0.96rem; margin: 0.28rem 0 0.06rem; }
         .post-text { font-size: 0.94rem; line-height: 1.7; color: #0F1419; overflow-wrap: anywhere; white-space: pre-line; }
+        .post-tags { display: flex; flex-wrap: wrap; gap: 0.2rem 0.6rem; margin-top: 0.35rem; }
+        .post-tags span { color: #2F5AA8; font-size: 0.85rem; font-weight: 600; }
         .post-actions { display: flex; gap: 1.2rem; margin-top: 0.5rem; }
         .post-actions button { background: none; border: none; padding: 0; color: #5B6570; font-size: 0.8rem; font-weight: 600; cursor: pointer; font-family: inherit; }
         .post-actions button:hover { color: #D6402C; text-decoration: underline; text-underline-offset: 3px; }
@@ -106,6 +108,13 @@
                     </div>
                     <p class="post-title">{{ $post->title }}</p>
                     <p class="post-text">{{ $post->content }}</p>
+                    @if($post->tags->isNotEmpty())
+                        <div class="post-tags">
+                            @foreach ($post->tags as $postTag)
+                                <span>#{{ $postTag->name }}</span>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             </article>
 
